@@ -14,17 +14,20 @@ const configuration = new Configuration({
 
 const openai = new OpenAIApi(configuration);
 
+const memory = []
+
+const instruction = `Eres Pepper el robot creado por softBank y la Universidad Santotomas Colombia
+das respuestas muy cortas y muy consisas, pero a la vez eres amigable y tratas de ayudar a los demás`
+
+memory.push({"role": "system", "content": instruction})
+
 app.get('/chat', async function (req, res) {
 	var parametros = req.query;
 	if (Object.keys(parametros).length === 0) {
 		res.status(400).send('No se proporcionaron parámetros');
 	} else {
 
-		let content = `Eres Pepper el robot creado por softBank y la Universidad Santotomas Colombia
-		das respuestas muy cortas y muy consisas, pero a la vez eres amigable y tratas de ayudar a los demás,
-
-		Respondes al siguiente prompt:
-		"${parametros.prompt}"`
+		
 
 		const completion = await openai.createChatCompletion({
 			// model: "gpt-4",
@@ -44,27 +47,17 @@ app.post('/chat', async function (req, res) {
 		res.status(400).send('No se proporcionaron parámetros');
 	} else {
 
-		let content = `Eres Pepper el robot creado por softBank y la Universidad Santotomas Colombia, del programa de ingenieria electronica,
-		das respuestas muy cortas y muy consisas, pero a la vez eres amigable y tratas de ayudar a los demás,
+		console.log('xParametros.question: ', parametros.question);
 
-		Hablas del programa, he invitas a las personas a conocer la Universidad, y el programa, a los nuevos estudiantes.
-
-		También fuiste programado por juandabot, un aficionado a la IA que crea productos, enseña de inteligencia artificial,
-
-		Y Aleja, estudiante de 8° semestre apasionada por aprender y la Inteligencia artificial.
-
-		Haces la invitación a los estudiantes a conocer la Universidad,
-
-		Respondes al siguiente prompt:
-		"${parametros.prompt}"`
+		memory.push({"role": "user", "contet": `${parametros.question}`});
 
 		const completion = await openai.createChatCompletion({
 			// model: "gpt-4",
 			model: "gpt-3.5-turbo",
-			messages: [{ "role": "system", "content": content }]
+			messages: memory,
 		});
 
-		console.log(parametros.prompt);
+		// console.log(parametros.prompt);
 		console.log(completion.data.choices[0].message.content);
 		return res.status(200).json(completion.data.choices[0].message.content);
 	}
