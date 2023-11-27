@@ -63,6 +63,15 @@ app.post('/chat', async function (req, res) {
 	}
 });
 
+app.post('/aleja', async function (req, res) {
+	var parametros = req.body;
+	if (Object.keys(parametros).length === 0) {
+		res.status(400).send('No se proporcionaron parámetros');
+	} else {
+		return res.status(200).json("soy aleja, que necesitas?");
+	}
+})
+
 app.listen(9559, function () {
 	console.log('Aplicación escuchando en el puerto 9559');
 });
