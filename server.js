@@ -26,18 +26,20 @@ app.get('/chat', async function (req, res) {
 	if (Object.keys(parametros).length === 0) {
 		res.status(400).send('No se proporcionaron parámetros');
 	} else {
-
-		
-
-		const completion = await openai.createChatCompletion({
-			// model: "gpt-4",
-			model: "gpt-3.5-turbo",
-			messages: [{ "role": "system", "content": content }]
-		});
-
-		console.log(parametros.prompt);
-		console.log(completion.data.choices[0].message.content);
-		return res.status(200).json(completion.data.choices[0].message.content);
+		try {
+			const completion = await openai.createChatCompletion({
+				// model: "gpt-4",
+				model: "gpt-3.5-turbo",
+				messages: [{ "role": "system", "content": content }]
+			});
+	
+			console.log(parametros.prompt);
+			console.log(completion.data.choices[0].message.content);
+			return res.status(200).json(completion.data.choices[0].message.content);
+		} catch (error) {
+			console.error(error.message);
+			return res.status(500).json({error: error.message})
+		}
 	}
 });
 
