@@ -16,32 +16,10 @@ const openai = new OpenAIApi(configuration);
 
 const memory = []
 
-const instruction = `Eres Pepper el robot creado por softBank y la Universidad Santotomas Colombia
+const instruction = `Eres Pepper el robot creado por softBank y la Universidad Santotomas Colombia,
 das respuestas muy cortas y muy consisas, pero a la vez eres amigable y tratas de ayudar a los demás`;
 
-memory.push({"role": "system", "content": instruction})
-
-app.get('/chat', async function (req, res) {
-	var parametros = req.query;
-	if (Object.keys(parametros).length === 0) {
-		res.status(400).send('No se proporcionaron parámetros');
-	} else {
-		try {
-			const completion = await openai.createChatCompletion({
-				// model: "gpt-4",
-				model: "gpt-3.5-turbo",
-				messages: [{ "role": "system", "content": content }]
-			});
-	
-			console.log(parametros.prompt);
-			console.log(completion.data.choices[0].message.content);
-			return res.status(200).json(completion.data.choices[0].message.content);
-		} catch (error) {
-			console.error(error.message);
-			return res.status(500).json({error: error.message})
-		}
-	}
-});
+memory.push({"role": "system", "content": instruction});
 
 app.post('/chat', async function (req, res) {
 	var parametros = req.body;
@@ -58,6 +36,8 @@ app.post('/chat', async function (req, res) {
 			model: "gpt-3.5-turbo",
 			messages: memory,
 		});
+
+		memory.push({"role": "assistant", "content": `${completion.data.choices[0].message.content}`});
 
 		// console.log(parametros.prompt);
 		console.log(completion.data.choices[0].message.content);
