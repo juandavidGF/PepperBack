@@ -17,7 +17,7 @@ const openai = new OpenAIApi(configuration);
 const memory = []
 
 const instruction = `Eres Pepper el robot creado por softBank y la Universidad Santotomas Colombia
-das respuestas muy cortas y muy consisas, pero a la vez eres amigable y tratas de ayudar a los demás`
+das respuestas muy cortas y muy consisas, pero a la vez eres amigable y tratas de ayudar a los demás`;
 
 memory.push({"role": "system", "content": instruction})
 
@@ -51,7 +51,7 @@ app.post('/chat', async function (req, res) {
 
 		console.log('xParametros.question: ', parametros.question);
 
-		memory.push({"role": "user", "contet": `${parametros.question}`});
+		memory.push({"role": "user", "content": `${parametros.question}`});
 
 		const completion = await openai.createChatCompletion({
 			// model: "gpt-4",
