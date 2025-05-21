@@ -1,2 +1,2 @@
 # PepperBack
-This is a server for connect with papper.
+This is a server for connect Open AI API with Pepper Robot
